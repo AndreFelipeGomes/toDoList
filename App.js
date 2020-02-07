@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, AsyncStorage, ScrollView } from 'react-native';
-import { TextInput, Button, IconButton } from 'react-native-paper';
+import { TextInput, Button, IconButton, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 
 export default class Main extends Component {
 
@@ -41,43 +41,54 @@ export default class Main extends Component {
     arrayObjectAux[pos].check = true
     AsyncStorage.setItem('@ArrayObject', JSON.stringify(arrayObjectAux))
     this.setState({
-      ArrayObject : arrayObjectAux
+      ArrayObject: arrayObjectAux
+    })
+  }
+
+  _limparArrayStorage = () => {
+    var arrayObjectAux = []
+    AsyncStorage.setItem('@ArrayObject', JSON.stringify(arrayObjectAux))
+    this.setState({
+      ArrayObject: arrayObjectAux
     })
   }
 
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: '#222222' }}>
-        <TextInput
-          style={styles.textInput}
-          label='Descrição'
-          mode='outlined'
-          value={this.state.textInput}
-          onChangeText={value => this.setState({ textInput: value })}
-          onEndEditing={this._storageSave}
-        />
-        <ScrollView>
-          {
-            (this.state.ArrayObject) ?
-              this.state.ArrayObject.map((value, index) =>
-                <View key={index} style={styles.box}> 
-                  <Text style={{ textAlign: 'center', color: 'white' }} key={index}>{value.text}</Text>
-                  {
-                    (!value.check) ?
-                      <View style={{ flex: 1, flexDirection: 'row', alignSelf: 'center', }}>
-                        <Button icon='minus' color='red' onPress={() => this._removeItemStorage(index)}></Button>
-                        <Button icon='check' color='green' onPress={() => this._checkItemStorage(index)}></Button>
-                      </View>
-                      :
-                      null
-                  }
-                </View>
-              )
-              :
-              null
-          }
-        </ScrollView>
-      </View>
+      <PaperProvider theme={theme}>
+        <View style={{ flex: 1, backgroundColor: '#222222' }}>
+          <TextInput
+            style={styles.textInput}
+            label='Descrição'
+            mode='outlined'
+            value={this.state.textInput}
+            onChangeText={value => this.setState({ textInput: value })}
+            onEndEditing={this._storageSave}
+          />
+          <ScrollView>
+            {
+              (this.state.ArrayObject) ?
+                this.state.ArrayObject.map((value, index) =>
+                  <View key={index} style={styles.box}>
+                    <Text style={{ textAlign: 'center', color: 'white' }} key={index}>{value.text}</Text>
+                    {
+                      (!value.check) ?
+                        <View style={{ flex: 1, flexDirection: 'row', alignSelf: 'center', }}>
+                          <Button icon='minus' color='red' onPress={() => this._removeItemStorage(index)}></Button>
+                          <Button icon='check' color='green' onPress={() => this._checkItemStorage(index)}></Button>
+                        </View>
+                        :
+                        null
+                    }
+                  </View>
+                )
+                :
+                null
+            }
+          </ScrollView>
+          <Button onPress={() => this._limparArrayStorage()}>Limpar</Button>
+        </View>
+      </PaperProvider>
     );
   }
 }
@@ -100,3 +111,12 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
 })
+
+const theme = {
+  ...DefaultTheme,
+  roundness: 2,
+  colors: {
+    primary: 'orange',
+    accent: '#f1c40f',
+  },
+};
