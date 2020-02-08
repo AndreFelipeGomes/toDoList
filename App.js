@@ -57,19 +57,19 @@ export default class Main extends Component {
     return (
       <PaperProvider theme={theme}>
         <View style={{ flex: 1, backgroundColor: '#222222' }}>
-          <TextInput
-            style={styles.textInput}
-            label='Descrição'
-            mode='outlined'
-            value={this.state.textInput}
-            onChangeText={value => this.setState({ textInput: value })}
-            onEndEditing={this._storageSave}
-          />
+            <TextInput
+              style={styles.textInput}
+              label='Descrição'
+              mode='outlined'
+              value={this.state.textInput}
+              onChangeText={value => this.setState({ textInput: value })}
+              onEndEditing={this._storageSave}
+            />
           <ScrollView>
             {
               (this.state.ArrayObject) ?
                 this.state.ArrayObject.map((value, index) =>
-                  <View key={index} style={styles.box}>
+                  <View key={index} style={(!value.check) ? styles.box : styles.boxCheck }>
                     <Text style={{ textAlign: 'center', color: 'white' }} key={index}>{value.text}</Text>
                     {
                       (!value.check) ?
@@ -102,6 +102,15 @@ const styles = StyleSheet.create({
     marginLeft: 14,
     marginRight: 14,
     borderColor: 'orange'
+  },
+  boxCheck :{
+    borderRadius: 10,
+    borderWidth: 2,
+    flex: 1,
+    marginTop: 14,
+    marginLeft: 14,
+    marginRight: 14,
+    borderColor: 'green'
   },
   textInput: {
     backgroundColor: '#222222',
