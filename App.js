@@ -106,7 +106,6 @@ export default class Main extends Component {
             mode="date"
             onConfirm={handleConfirm}
             onCancel={hideDatePicker}
-            isDarkModeEnabled={true}
           />
           <View style={{ paddingTop: 25 }}>
             <TextInput
@@ -116,7 +115,7 @@ export default class Main extends Component {
               value={this.state.textInput}
               onChangeText={value => this.setState({ textInput: value })}
             />
-            <Button color='green' onPress={() => this._storageSave()}>Adicionar</Button>
+            <Button color='#5AD170' onPress={() => this._storageSave()}>Adicionar</Button>
           </View>
           <ScrollView>
             {
@@ -128,8 +127,8 @@ export default class Main extends Component {
                       {
                         (!value.check) ?
                           <View style={{ flex: 1, flexDirection: 'row', alignSelf: 'center', }}>
-                            <Button icon='minus' color='red' onPress={() => this._removeItemStorage(index)}></Button>
-                            <Button icon='check' color='green' onPress={() => this._checkItemStorage(index)}></Button>
+                            <Button icon='minus' color='#D15A5A' onPress={() => this._removeItemStorage(index)}></Button>
+                            <Button icon='check' color='#5AD170' onPress={() => this._checkItemStorage(index)}></Button>
                           </View>
                           :
                           null
@@ -142,7 +141,7 @@ export default class Main extends Component {
                 null
             }
           </ScrollView>
-          <Button color='red' onPress={() => this._limparArrayStorage()}>Limpar</Button>
+          <Button color='#D15A5A' onPress={() => this._limparArrayStorage()}>Limpar</Button>
         </View>
       </PaperProvider>
     );
@@ -157,7 +156,7 @@ const styles = StyleSheet.create({
     marginTop: 14,
     marginLeft: 14,
     marginRight: 14,
-    borderColor: 'orange'
+    borderColor: '#D37E5A'
   },
   boxCheck: {
     borderRadius: 10,
@@ -166,7 +165,7 @@ const styles = StyleSheet.create({
     marginTop: 14,
     marginLeft: 14,
     marginRight: 14,
-    borderColor: 'green'
+    borderColor: '#5AD170'
   },
   textInput: {
     backgroundColor: '#222222',
@@ -179,7 +178,7 @@ const theme = {
   ...DefaultTheme,
   roundness: 2,
   colors: {
-    primary: 'orange',
+    primary: '#D37E5A',
     accent: '#f1c40f',
   },
 };
