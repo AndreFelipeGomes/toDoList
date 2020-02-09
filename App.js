@@ -6,10 +6,11 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 export default class Main extends Component {
 
   state = {
-    ArrayObject: [],
-    textInput: '',
-    date: '',
+    ArrayObject        : [],
+    textInput          : '',
+    date               : '',
     isDatePickerVisible: false,
+    dateAux            : null
   }
   componentDidMount = () => {
     var today = new Date();
@@ -17,12 +18,14 @@ export default class Main extends Component {
     var ano = today.substr(0,4)
     var mes = today.substr(5,2)
     var dia = today.substr(8,2)
+    var dateAux = new Date(ano,mes-1,dia);
     AsyncStorage.getItem('@ArrayObject', (err, result) => {
       this.setState({
         ArrayObject: JSON.parse(result),
-        date: dia + '/' + mes + '/' + ano
+        date: dia + '/' + mes + '/' + ano,
+        dateAux : dateAux
       })
-    });
+    });    
   }
   _storageSave = () => {
 
@@ -84,12 +87,15 @@ export default class Main extends Component {
       this.setState({isDatePickerVisible: false});
     };
     const handleConfirm = date => {
+      console.log(date)
       var today = JSON.stringify(date);
       var ano = today.substr(1,4)
       var mes = today.substr(6,2)
       var dia = today.substr(9,2)
       hideDatePicker();
-      this.setState({date: dia + '/' + mes + '/' + ano});
+      var dateAux = new Date(ano,mes-1,dia);
+
+      this.setState({date: dia + '/' + mes + '/' + ano, dateAux : dateAux});
     };
     return (
       <PaperProvider theme={theme}>
@@ -104,6 +110,7 @@ export default class Main extends Component {
           <DateTimePickerModal
             isVisible={this.state.isDatePickerVisible}
             mode="date"
+            date={this.state.dateAux}
             onConfirm={handleConfirm}
             onCancel={hideDatePicker}
           />
