@@ -6,36 +6,37 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 export default class Main extends Component {
 
   state = {
-    ArrayObject        : [],
-    textInput          : '',
-    date               : '',
+    ArrayObject: [],
+    textInput: '',
+    date: '',
     isDatePickerVisible: false,
-    dateAux            : null
+    dateAux: null
   }
+
   componentDidMount = () => {
     var today = new Date();
     today = today.toISOString()
-    var ano = today.substr(0,4)
-    var mes = today.substr(5,2)
-    var dia = today.substr(8,2)
-    var dateAux = new Date(ano,mes-1,dia);
+    var ano = today.substr(0, 4)
+    var mes = today.substr(5, 2)
+    var dia = today.substr(8, 2)
+    var dateAux = new Date(ano, mes - 1, dia);
     AsyncStorage.getItem('@ArrayObject', (err, result) => {
       this.setState({
         ArrayObject: JSON.parse(result),
         date: dia + '/' + mes + '/' + ano,
-        dateAux : dateAux
+        dateAux: dateAux
       })
-    });    
+    });
   }
-  _storageSave = () => {
 
+  _storageSave = () => {
     //Usa uma variavel auxiliar para nao dar conflito com a renderizacao da tela e n chamar o evento em loop
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
     var arrayObjectAux = this.state.ArrayObject || []
     var textObjct = {
-      text : this.state.textInput,
+      text: this.state.textInput,
       check: false,
-      date : this.state.date,
+      date: this.state.date,
     }
 
     //Coloca o objeto dento do array
@@ -81,21 +82,26 @@ export default class Main extends Component {
 
   render() {
     const showDatePicker = () => {
-      this.setState({isDatePickerVisible: true});
+      this.setState({ isDatePickerVisible: true });
     };
+
     const hideDatePicker = () => {
-      this.setState({isDatePickerVisible: false});
+      this.setState({ isDatePickerVisible: false });
     };
+
     const handleConfirm = date => {
       console.log(date)
-      var today = JSON.stringify(date);
-      var ano = today.substr(1,4)
-      var mes = today.substr(6,2)
-      var dia = today.substr(9,2)
-      hideDatePicker();
-      var dateAux = new Date(ano,mes-1,dia);
 
-      this.setState({date: dia + '/' + mes + '/' + ano, dateAux : dateAux});
+      var today = JSON.stringify(date);
+
+      var ano = today.substr(1, 4)
+      var mes = today.substr(6, 2)
+      var dia = today.substr(9, 2)
+
+      hideDatePicker();
+
+      var dateAux = new Date(ano, mes - 1, dia);
+      this.setState({ date: dia + '/' + mes + '/' + ano, dateAux: dateAux });
     };
     return (
       <PaperProvider theme={theme}>
@@ -122,33 +128,33 @@ export default class Main extends Component {
               value={this.state.textInput}
               onChangeText={value => this.setState({ textInput: value })}
             />
-            <Button color='#5AD170' onPress={() => this._storageSave()}>Adicionar</Button>
+            <Button color='white' style={{backgroundColor: '#5AD170', marginTop: 12, marginLeft: 12, marginRight: 12}} onPress={() => this._storageSave()}>Adicionar</Button>
           </View>
           <ScrollView>
             {
               (this.state.ArrayObject) ?
                 this.state.ArrayObject.map((value, index) =>
-                (value.date == this.state.date)? //Filtra a data
+                  (value.date == this.state.date) ? //Filtra a data
                     <View key={index} style={(!value.check) ? styles.box : styles.boxCheck}>
                       <Text style={{ textAlign: 'center', color: 'white' }} key={index}>{value.text}</Text>
-                      {
-                        (!value.check) ?
                           <View style={{ flex: 1, flexDirection: 'row', alignSelf: 'center', }}>
-                            <Button icon='minus' color='#D15A5A' onPress={() => this._removeItemStorage(index)}></Button>
-                            <Button icon='check' color='#5AD170' onPress={() => this._checkItemStorage(index)}></Button>
+                            <Button icon='minus' color='white' style={{flex: (!value.check)? 0.5 : 1,backgroundColor: '#D15A5A', borderBottomLeftRadius: 10, borderBottomRightRadius: (!value.check)? 0 : 10}} onPress={() => this._removeItemStorage(index)}></Button>
+                            {
+                              (!value.check)? 
+                                <Button icon='check' color='white' style={{flex: 0.5,backgroundColor: '#5AD170',  borderBottomRightRadius: 10}} onPress={() => this._checkItemStorage(index)}></Button>
+                              :
+                                null
+                            }                         
                           </View>
-                          :
-                          null
-                      }
                     </View>
-                  :
-                   null
+                    :
+                    null
                 )
                 :
                 null
             }
           </ScrollView>
-          <Button color='#D15A5A' onPress={() => this._limparArrayStorage()}>Limpar</Button>
+          <Button color='white' style={{backgroundColor: '#D15A5A'}} onPress={() => this._limparArrayStorage()}>Limpar</Button>
         </View>
       </PaperProvider>
     );
