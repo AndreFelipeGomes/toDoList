@@ -25,16 +25,30 @@ export default class Main extends Component {
     });
   }
   _storageSave = () => {
+
+    //Usa uma variavel auxiliar para nao dar conflito com a renderizacao da tela e n chamar o evento em loop
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
     var arrayObjectAux = this.state.ArrayObject || []
     var textObjct = {
-      text: this.state.textInput,
+      text : this.state.textInput,
       check: false,
+      date : this.state.date,
     }
+
+    //Coloca o objeto dento do array
+    ////////////////////////////////
     arrayObjectAux.push(textObjct)
 
+    //Altera o array do state para renderizar o novo arry em tela
+    /////////////////////////////////////////////////////////////
     this.setState({ ArrayObject: arrayObjectAux })
 
+    //Salva o novo array no localStorage
+    ////////////////////////////////////
     AsyncStorage.setItem('@ArrayObject', JSON.stringify(this.state.ArrayObject));
+
+    //Limpa o a descricao do textInput
+    //////////////////////////////////
     this.setState({ textInput: '' })
   }
 
@@ -108,18 +122,21 @@ export default class Main extends Component {
             {
               (this.state.ArrayObject) ?
                 this.state.ArrayObject.map((value, index) =>
-                  <View key={index} style={(!value.check) ? styles.box : styles.boxCheck}>
-                    <Text style={{ textAlign: 'center', color: 'white' }} key={index}>{value.text}</Text>
-                    {
-                      (!value.check) ?
-                        <View style={{ flex: 1, flexDirection: 'row', alignSelf: 'center', }}>
-                          <Button icon='minus' color='red' onPress={() => this._removeItemStorage(index)}></Button>
-                          <Button icon='check' color='green' onPress={() => this._checkItemStorage(index)}></Button>
-                        </View>
-                        :
-                        null
-                    }
-                  </View>
+                (value.date == this.state.date)? //Filtra a data
+                    <View key={index} style={(!value.check) ? styles.box : styles.boxCheck}>
+                      <Text style={{ textAlign: 'center', color: 'white' }} key={index}>{value.text}</Text>
+                      {
+                        (!value.check) ?
+                          <View style={{ flex: 1, flexDirection: 'row', alignSelf: 'center', }}>
+                            <Button icon='minus' color='red' onPress={() => this._removeItemStorage(index)}></Button>
+                            <Button icon='check' color='green' onPress={() => this._checkItemStorage(index)}></Button>
+                          </View>
+                          :
+                          null
+                      }
+                    </View>
+                  :
+                   null
                 )
                 :
                 null
