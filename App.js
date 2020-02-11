@@ -90,7 +90,6 @@ export default class Main extends Component {
     };
 
     const handleConfirm = date => {
-      console.log(date)
 
       var today = JSON.stringify(date);
 
@@ -103,6 +102,24 @@ export default class Main extends Component {
       var dateAux = new Date(ano, mes - 1, dia);
       this.setState({ date: dia + '/' + mes + '/' + ano, dateAux: dateAux });
     };
+
+    //FILTRA ARRAY PARA REMOVER TODOS OS ITEM PELA DATA SELECIONADA NO CALENDARIO
+    /////////////////////////////////////////////////////////////////////////////
+    _filterArray = () => {
+      var dataAtual = this.state.date
+      var filtered = this.state.ArrayObject.filter(function(value){
+        if (value.date != dataAtual) {
+          return value
+        }
+      }) 
+      this.setState({
+        ArrayObject : filtered    
+      })     
+      //Salva o novo array no localStorage
+      ////////////////////////////////////
+      AsyncStorage.setItem('@ArrayObject', JSON.stringify(this.state.ArrayObject));
+    }
+
     return (
       <PaperProvider theme={theme}>
         <View style={{ flex: 1, backgroundColor: '#222222', }}>
@@ -125,6 +142,7 @@ export default class Main extends Component {
               style={styles.textInput}
               label='Descrição'
               mode='outlined'
+              color='white'
               value={this.state.textInput}
               onChangeText={value => this.setState({ textInput: value })}
             />
@@ -154,7 +172,7 @@ export default class Main extends Component {
                 null
             }
           </ScrollView>
-          <Button color='white' style={{backgroundColor: '#D15A5A'}} onPress={() => this._limparArrayStorage()}>Limpar</Button>
+          <Button color='white' style={{backgroundColor: '#D15A5A'}} onPress={() => _filterArray()}>Limpar</Button>
         </View>
       </PaperProvider>
     );
